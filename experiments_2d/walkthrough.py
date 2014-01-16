@@ -56,6 +56,12 @@ from dolfin import *
 
 main()
 
+parameters["form_compiler"]["cpp_optimize"] = True
+ffc_options = {"optimize": True, \
+               "eliminate_zeros": True, \
+               "precompute_basis_const": True, \
+               "precompute_ip_const": True}
+
 mesh = Mesh("output.xml")
 
 V = VectorFunctionSpace(mesh, "Lagrange", 1)
@@ -82,14 +88,14 @@ outer_b.mark(parts, 1)
 left_b.mark(parts, 2)
 right_b.mark(parts, 3)
 
-plot(parts, interactive=True)
+# plot(parts, interactive=True)
 
 outer = Expression(("x[0]", "x[1]"))
 bc_outer = DirichletBC(V, outer, parts, 1)
-left = Expression(("x[0]+0.05", "x[1]"))
-bc_left = DirichletBC(V, outer, parts, 2)
-right = Expression(("x[0]-0.05", "x[1]"))
-bc_right = DirichletBC(V, outer, parts, 3)
+left = Expression(("x[0]+0.1", "x[1]"))
+bc_left = DirichletBC(V, left, parts, 2)
+right = Expression(("x[0]-0.1", "x[1]"))
+bc_right = DirichletBC(V, right, parts, 3)
 
 bc = [bc_outer, bc_left, bc_right]
 
@@ -112,4 +118,21 @@ J = derivative(F, u, du)
 
 solve(F == 0, u, bc, J=J)
 
-plot(u, mode = "displacement", interactive=True)
+# plot(u, mode = "displacement", interactive=True)
+
+import robert_visualize_transformation
+from matplotlib import pyplot
+
+fig = pyplot.figure()
+ax1 = fig.add_subplot(1,3,1)
+ax1.set_aspect('equal')
+
+def try_evaluate(point):
+    try:
+        u(point[0], point[1])
+    except:
+        return True
+    return False
+
+robert_visualize_transformation.visualize_transformation(ax1, u, try_evaluate)
+pyplot.show()
