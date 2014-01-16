@@ -313,7 +313,7 @@ int main() {
   DirichletBC bci1(V, first_map, first_inner_domain);
   DirichletBC bci2(V, second_map, second_inner_domain);
   DirichletBC bco(V, o2o, outer_domain);
-  std::vector<const DirichletBC*> bcs;
+  std::vector<const BoundaryCondition*> bcs;
   bcs.push_back(&bci1);
   bcs.push_back(&bci2);
   bcs.push_back(&bco);
