@@ -92,9 +92,9 @@ right_b.mark(parts, 3)
 
 outer = Expression(("x[0]", "x[1]"))
 bc_outer = DirichletBC(V, outer, parts, 1)
-left = Expression(("x[0]+0.1", "x[1]"))
+left = Expression(("x[0]+0.05", "x[1]"))
 bc_left = DirichletBC(V, left, parts, 2)
-right = Expression(("x[0]-0.1", "x[1]"))
+right = Expression(("x[0]-0.05", "x[1]"))
 bc_right = DirichletBC(V, right, parts, 3)
 
 bc = [bc_outer, bc_left, bc_right]
@@ -111,7 +111,7 @@ Ic = tr(C)
 J  = det(F)
 
 psi = Ic - 2
-Pi = psi*dx
+Pi = psi*dx + 8*(det(grad(u)) - 1)*(det(grad(u)) - 1)*dx
 
 F = derivative(Pi, u, v)
 J = derivative(F, u, du)
